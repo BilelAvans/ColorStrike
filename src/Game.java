@@ -14,7 +14,6 @@ public class Game extends JPanel
 	InfoPanel  iP;
 	GamePanel  gP;
 	
-	
 	BorderLayout bl = new BorderLayout();
 
 	Game()

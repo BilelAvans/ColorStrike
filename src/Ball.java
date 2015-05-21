@@ -11,24 +11,31 @@ public class Ball extends Ellipse2D.Double
 	// Randomiser
 	private static Random random = new Random();
 	// Hoeveel pixels verschuift het balletje over x en y per verschuiving
-	int speed = 5;
+	int speed = 15;
 	// Array voor het bijhouden van hoeken van dit frame
 	private Point2D.Double[][] paneelHoeken;
+	// Laast onthouden hoek waarin het balletje beweegt
+	double hoekInRadialen = 0;
+	
+	GamePanel gP;
 	
 	// Balletje
-	Ball()
-	{
-		this(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 200));
+	Ball(GamePanel gP)
+	{		
+		this(gP, new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 200));
 	}
 	// Balletje met voorgedefinieerde kleur
-	Ball(Color c)
+	Ball(GamePanel gP, Color c)
 	{
 		super(300, -300, 30, 30);
 		Point2D.Double begin = getHoek(random.nextInt(2), random.nextInt(2));
 		setFrame(begin.getX(), begin.getY(), 30, 30);
 		
 		kleur = c;
+		
+		this.gP = gP;
 	}
+	
 	// Positie van het balletje tekenen
 	public void paint(Graphics2D graph)
 	{
@@ -37,6 +44,8 @@ public class Ball extends Ellipse2D.Double
 		graph.fill(this);
 		
 		moveTowardsOrigin(1);
+		emitLightInSquare(graph);
+		
 	}
 	// Positie zetten
 	public void setPosition()
@@ -44,10 +53,28 @@ public class Ball extends Ellipse2D.Double
 		this.setFrame(getX(), getX(), getWidth(), getHeight());
 	}
 	
+	public void emitLightInSquare(Graphics2D graph)
+	{
+		if (Math.abs(getX()) < 5 * speed)
+		{
+			if (hoekInRadialen > 0 && hoekInRadialen < (Math.PI /2))
+				gP.paintVierkant(1, 1, kleur, graph);
+			else if (hoekInRadialen > (Math.PI / 2) && hoekInRadialen < Math.PI)
+				gP.paintVierkant(1, 0, kleur, graph);
+			else if (hoekInRadialen < 0 && hoekInRadialen > -(Math.PI /2))
+				gP.paintVierkant(0, 1, kleur, graph);
+			else if (hoekInRadialen < (Math.PI / 2) && hoekInRadialen > -Math.PI)
+				gP.paintVierkant(0, 0, kleur, graph);
+			
+			System.out.println(hoekInRadialen * 180 / Math.PI);
+		}
+			
+	}
+	
 	public void moveTowardsOrigin(int loopSize)
 	{
 		// Hoek berekenen met behulp van de afstand tot de oorsprong 
-		double hoekInRadialen = Math.atan2(getY(), getX());
+		hoekInRadialen = Math.atan2(getY(), getX());
 		
 		// Verschuiven richting oorpsrong
 		setFrame(getX() + speed * loopSize * Math.cos(hoekInRadialen + Math.PI), 

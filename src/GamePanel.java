@@ -47,7 +47,6 @@ public class GamePanel extends JPanel implements ActionListener
 		drawLines(graph);
 		drawBalls(graph);
 		
-		paintVierkant(random.nextInt(2), random.nextInt(2), new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)), graph);
 	}
 	
 	private void drawLines(Graphics2D graph)
@@ -64,8 +63,8 @@ public class GamePanel extends JPanel implements ActionListener
 	
 	private void drawBalls(Graphics2D graph)
 	{
-		if (balls.size() < 5)
-			balls.add(new Ball());
+		if (balls.size() < 1)
+			balls.add(new Ball(this));
 		
 		Iterator<Ball> it = balls.iterator();
 		
@@ -107,9 +106,7 @@ public class GamePanel extends JPanel implements ActionListener
 			};
 	}
 	
-
-	
-	private void paintVierkant(int rij, int kolom, Color c, Graphics2D graph)
+	public void paintVierkant(int rij, int kolom, Color c, Graphics2D graph)
 	{
 		Rectangle2D.Double vierkant = getDeelUitVier(rij, kolom);
 		c = new Color(c.getRed(), c.getGreen(), c.getBlue(), 100);
